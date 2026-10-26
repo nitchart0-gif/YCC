@@ -24,7 +24,7 @@
 ## Script skill findings
 Skill `youtube-video-script`, version 1.0.7. Contract: timed script with hook/timestamped beats/closing CTA; three titles under 100 characters; description under 5,000 characters with links/disclosure; production notes for footage/caption/licensing. Reference mentions tags ≤500 characters and at least three chapters, starting at 00:00 and at least ten seconds each. Guardrails prohibit unlicensed media suggestions, views/subscriber/revenue promises, and pasting competitor scripts/transcripts.
 
-**Schema mismatch:** brief uses nested `video.target_minutes`; helper reads flat `minutes` and `words_per_minute`. Helper writes only `calculation.md`, not the full script or full platform validation. Preserve original files and implement an adapter.
+**Schema adapter progress:** Draft PR #2 (`fix/script-brief-schema`) updates the helper to read nested `video.target_minutes` and `video.words_per_minute`, retains legacy flat-field compatibility, validates inputs, and avoids overwriting `calculation.md` unless `--overwrite` is passed. It adds unit tests. The helper still only calculates a word budget; it does not generate the full script or validate all platform limits. PR #2 is open and draft; tests have not been executed in this environment because outbound GitHub access was unavailable.
 
 ## Product invariants
 - End-to-end workflow: Source Input → Source Analysis → Reference Script → Master Script → Sound Studio / Video Prompt Studio / Thumbnail Studio / SEO Studio.
@@ -64,7 +64,7 @@ No application install/build/test commands are verified. The skill helper docume
 python3 "SCRIP SKILLS/scripts/script_length.py" --input "SCRIP SKILLS/templates/video-brief.yaml" --out ./out
 ```
 
-Because the template/helper schemas differ, use a controlled fixture or adapter. This command only creates a word-budget calculation report.
+Replace the template placeholders with real values before running. The helper requires positive numeric duration and words-per-minute values and only creates a word-budget report. Use `--overwrite` explicitly if replacing an existing report is intended.
 
 ## Update rule
 After meaningful work, record files changed, verification performed, test results, known issues, and the exact next action. Mark work Verified only after verification passes.
