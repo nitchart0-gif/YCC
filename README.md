@@ -54,6 +54,7 @@ Replace the template placeholders with real values before running. The helper re
 ## Documentation
 
 - [Master Product Plan — read first](MASTER_PRODUCT_PLAN.md)
+- [Google AI Studio strict build rules and reusable prompts](GOOGLE_AI_STUDIO_STRICT_BUILD_RULES.md)
 - [Requirements](PROJECT_REQUIREMENTS.md)
 - [Architecture](ARCHITECTURE.md)
 - [Features](FEATURES.md)
