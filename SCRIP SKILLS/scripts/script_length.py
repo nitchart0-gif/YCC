@@ -18,8 +18,6 @@ Usage:
 import argparse
 import math
 import os
-import re
-import sys
 
 
 TITLE = "YouTube Video Script Writer — Word Budget"
@@ -41,7 +39,7 @@ def read_brief(path):
     except OSError as exc:
         raise ValueError(f"cannot read input file '{path}': {exc}") from exc
 
-    for line_number, line in enumerate(raw.splitlines(), start=1):
+    for line in raw.splitlines():
         if not line.strip() or line.lstrip().startswith("#"):
             continue
 
