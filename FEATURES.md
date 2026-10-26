@@ -22,7 +22,7 @@ Required contract:
 
 Reference guide also says tags total ≤500 characters and chapters include at least three entries, first at `00:00`, each ≥10 seconds. Recheck current platform guidance before release. Do not suggest unlicensed media, promise views/subscribers/revenue, or paste a competitor's script/transcript.
 
-**Important mismatch:** Template uses nested `video.target_minutes`; helper reads flat `minutes` and `words_per_minute`. Helper writes only `calculation.md`, not a full script, and does not validate every limit. Build an adapter and independent validators; do not overwrite originals.
+**Schema adapter progress:** Draft PR #2 updates the helper to read nested `video.target_minutes` and `video.words_per_minute`, while retaining legacy flat-field compatibility. It validates missing/placeholder/non-positive values and requires `--overwrite` before replacing an existing report. The helper still writes only `calculation.md`; complete script generation and independent script/platform validation belong to later AI workflow stages. Tests are added but not yet executed in this environment.
 
 ## F-005 Master Script — Planned
 A separate production-ready artifact based on approved Reference Script, analysis and effective project settings. Validate structure/length/duration, version edits, gate generation on required approved/current inputs, and stale dependents after upstream changes.
