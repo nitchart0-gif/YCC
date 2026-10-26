@@ -104,3 +104,9 @@ Replace the template placeholders with real values before running. The helper re
 
 ## Update rule
 After meaningful work, record files changed, verification performed, test results, known issues, and the exact next action. Mark work Verified only after verification passes.
+
+## Strict AI builder guardrails
+- Added `GOOGLE_AI_STUDIO_STRICT_BUILD_RULES.md` with persistent instruction text and a mandatory per-task prompt prefix for Google AI Studio or any AI coding agent.
+- Added section 15 to `MASTER_PRODUCT_PLAN.md` and linked the rules from `README.md`.
+- The contract forbids unapproved feature/requirement changes, requires stopping on ambiguity/conflicts, requires requirement-to-test traceability, and prohibits fake success claims.
+- This is prompt/process control, not a perfect technical lock. Branch protection, code review, CI and acceptance tests remain necessary.
