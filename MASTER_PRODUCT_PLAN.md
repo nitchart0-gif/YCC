@@ -985,6 +985,14 @@ YCC Studio is not ready for release until:
 
 ---
 
+## 15. Strict AI-builder instruction contract
+
+Any AI coding agent used to implement YCC Studio—including Google AI Studio—must follow [`GOOGLE_AI_STUDIO_STRICT_BUILD_RULES.md`](GOOGLE_AI_STUDIO_STRICT_BUILD_RULES.md). That document contains a reusable persistent instruction and a short prefix for every individual task prompt.
+
+The non-negotiable rule is: **implement the approved plan; do not silently change the plan.** Before a task, the agent must read the active branch's specification, identify requirement IDs and acceptance criteria, list intended file changes and tests, and stop when requirements are ambiguous, contradictory, missing, or technically blocked. Any product change requires a separate written proposal and the owner's explicit approval before the plan or implementation is changed.
+
+Prompt wording is not a technical guarantee. Enforce compliance through version control, diff review, acceptance tests, CI, secret scanning, and explicit verification. The agent must report real test evidence and must never claim unexecuted checks passed.
+
 ## Final instruction to the builder
 
 Build the product described here, not merely a dashboard that resembles it. Preserve the user's source material and version history. Keep every output traceable to its inputs. Make free-first routing and explicit paid consent enforceable in backend code. Validate exact generator output contracts deterministically. Treat unresolved choices as decisions to surface, not gaps to fill silently. Verify before claiming success.
