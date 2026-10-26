@@ -1,107 +1,182 @@
 #!/usr/bin/env python3
-"""YouTube Video Script Writer
+"""Calculate a YouTube script word budget from a video brief.
 
-Computes the youtube video script writer number from the values the user supplies.
+This helper calculates a target word budget only. It does not generate the
+script, titles, description, pinned comment, or production notes.
 
-Parameters for this build:
-{
-  "formula": "script word budget = minutes * words_per_minute",
-  "fields": [
-    "minutes",
-    "words_per_minute"
-  ]
-}
+Supported input fields:
+  video.target_minutes       (preferred nested brief schema)
+  video.words_per_minute     (preferred; must be supplied)
+  minutes                    (legacy flat-schema alias)
+  words_per_minute           (legacy flat-schema alias)
 
 Usage:
-    python3 youtube_video_script_writer.py --input <file> --out <dir>
+    python3 script_length.py --input video-brief.yaml --out ./out
+    python3 script_length.py --input video-brief.yaml --out ./out --overwrite
 """
 
 import argparse
+import math
 import os
 import re
 import sys
 
-TITLE = "YouTube Video Script Writer"
+
+TITLE = "YouTube Video Script Writer — Word Budget"
+FORMULA = "estimated word budget = target minutes * words per minute"
 
 
-def read_flat(path):
-    """Read a small YAML-ish file: `key: value`, `- item` lists, '#' comments."""
-    data, key = {}, None
+def read_brief(path):
+    """Read the small YAML subset used by video-brief.yaml.
+
+    This parser intentionally uses only Python's standard library and does
+    not claim to be a general-purpose YAML parser. It supports indentation-
+    based mapping keys and ignores list entries/comments.
+    """
+    data = {}
+    parents = []
     try:
-        raw = open(path, encoding="utf-8", errors="replace").read()
+        with open(path, encoding="utf-8") as handle:
+            raw = handle.read()
     except OSError as exc:
-        raise SystemExit(f"cannot read {path}: {exc}")
-    for line in raw.splitlines():
-        if not line.strip() or line.strip().startswith("#"):
+        raise ValueError(f"cannot read input file '{path}': {exc}") from exc
+
+    for line_number, line in enumerate(raw.splitlines(), start=1):
+        if not line.strip() or line.lstrip().startswith("#"):
             continue
+
+        indent = len(line) - len(line.lstrip(" "))
         stripped = line.strip()
         if stripped.startswith("- "):
-            if key is None:
-                continue
-            data.setdefault(key, [])
-            if isinstance(data[key], list):
-                data[key].append(stripped[2:].strip().strip('"').strip("'"))
             continue
-        if ":" in stripped:
-            name, _, value = stripped.partition(":")
-            name, value = name.strip(), value.strip().strip('"').strip("'")
-            if value == "":
-                data[name] = []
-                key = name
-            else:
-                data[name] = value
-                key = None
+        if ":" not in stripped:
+            continue
+
+        name, _, value = stripped.partition(":")
+        name = name.strip()
+        value = value.strip()
+        if not name:
+            continue
+
+        while parents and indent <= parents[-1][0]:
+            parents.pop()
+
+        if value == "":
+            parents.append((indent, name))
+            continue
+
+        # Remove matching surrounding quotes, but preserve other characters.
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in ("'", '"'):
+            value = value[1:-1]
+
+        full_key = ".".join([part for _, part in parents] + [name])
+        data[full_key] = value
+
     return data
 
 
-def read_csv(path):
-    import csv
-    with open(path, newline="", encoding="utf-8", errors="replace") as handle:
-        return list(csv.DictReader(handle))
+def _number(data, preferred_key, legacy_key, label):
+    raw = data.get(preferred_key)
+    if raw is None or not str(raw).strip():
+        raw = data.get(legacy_key)
+
+    if raw is None or not str(raw).strip():
+        raise ValueError(
+            f"missing {label}: set '{preferred_key}' in the video brief "
+            f"(or legacy '{legacy_key}')"
+        )
+
+    text = str(raw).strip().replace(",", "")
+    if text.startswith("<") and text.endswith(">"):
+        raise ValueError(
+            f"{label} is still a template placeholder ({text}); replace it with a number"
+        )
+
+    try:
+        value = float(text)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"{label} must be a number; received {raw!r}") from exc
+
+    if not math.isfinite(value) or value <= 0:
+        raise ValueError(f"{label} must be a finite number greater than zero")
+
+    return value
 
 
-def write_out(out_dir, name, lines):
-    import os
+def write_out(out_dir, name, lines, overwrite=False):
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, name)
-    with open(path, "w", encoding="utf-8") as handle:
-        handle.write("\n".join(lines) + "\n")
+    if os.path.exists(path) and not overwrite:
+        raise ValueError(
+            f"refusing to overwrite existing output '{path}'; "
+            "choose a new --out directory or pass --overwrite"
+        )
+
+    # Write to a temporary file first so a failed write does not truncate the
+    # previous report.
+    temporary_path = path + ".tmp"
+    try:
+        with open(temporary_path, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write("\n".join(lines) + "\n")
+        os.replace(temporary_path, path)
+    finally:
+        if os.path.exists(temporary_path):
+            os.remove(temporary_path)
+
     print(f"wrote {path}")
     return path
 
 
-FIELDS = ["minutes", "words_per_minute"]
-FORMULA = 'script word budget = minutes * words_per_minute'
+def run(input_path, out_dir, overwrite=False):
+    data = read_brief(input_path)
+    minutes = _number(
+        data, "video.target_minutes", "minutes", "target duration in minutes"
+    )
+    words_per_minute = _number(
+        data, "video.words_per_minute", "words_per_minute", "words per minute"
+    )
+    word_budget = round(minutes * words_per_minute)
 
-
-def run(input_path, out_dir):
-    data = read_flat(input_path)
-    values = {}
-    for field in FIELDS:
-        raw = str(data.get(field, "") or "0").replace(",", "").replace("$", "").replace("%", "")
-        try:
-            values[field] = float(raw)
-        except ValueError:
-            values[field] = 0.0
-    report = [f"# {TITLE}", "", f"source: {input_path}", ""]
-    for field, value in values.items():
-        report.append(f"- {field}: {value:g}")
-    report.append("")
-    report.append(f"formula: {FORMULA or 'documented in the skill'}")
-    report.append("")
-    report.append("## Guardrails to keep")
-    for rule in ["Never suggest using music, clips or footage the user has not licensed.", "Never promise a view count, subscriber number or revenue for the video.", "Never paste a competitor's script or transcript into the draft."]:
-        report.append(f"- {rule}")
-    write_out(out_dir, "calculation.md", report)
+    report = [
+        f"# {TITLE}",
+        "",
+        f"source: {input_path}",
+        "",
+        "## Inputs",
+        f"- target_minutes: {minutes:g}",
+        f"- words_per_minute: {words_per_minute:g}",
+        "",
+        "## Estimate",
+        f"- estimated_word_budget: {word_budget}",
+        f"- formula: {FORMULA}",
+        "",
+        "This is a planning estimate, not a generated script or a validation "
+        "of the final script's actual word count, timestamps, platform limits, "
+        "or runtime.",
+        "",
+        "## Guardrails to keep",
+        "- Never suggest using music, clips or footage the user has not licensed.",
+        "- Never promise a view count, subscriber number or revenue for the video.",
+        "- Never paste a competitor's script or transcript into the draft.",
+    ]
+    return write_out(out_dir, "calculation.md", report, overwrite=overwrite)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--input", required=True, help="input file for this job")
+    parser.add_argument("--input", required=True, help="video brief YAML file")
     parser.add_argument("--out", default="./out", help="output directory")
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="replace an existing calculation.md in the output directory",
+    )
     args = parser.parse_args()
-    os.makedirs(args.out, exist_ok=True)
-    run(args.input, args.out)
+
+    try:
+        run(args.input, args.out, overwrite=args.overwrite)
+    except ValueError as exc:
+        parser.error(str(exc))
 
 
 if __name__ == "__main__":
