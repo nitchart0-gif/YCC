@@ -1,6 +1,6 @@
 # YCC Studio — Project Requirements
 
-- **Status:** Draft baseline; exact PDF-derived schemas and application decisions remain TBD.
+- **Status:** Draft baseline; generator rules transcribed from the supplied PDF text. Application decisions remain TBD.
 - **Planning baseline:** 2026-10-26
 - **Release target / owner:** TBD
 
@@ -51,22 +51,31 @@ Primary user: YouTube creator/production operator. Team roles and workspace coll
 - **FR-031:** Store playable/downloadable audio with script version, voice/config, provider/model, job, and usage association.
 - **FR-032:** Handle provider/storage/partial failures without false success or duplicate billable jobs.
 
-### Video Prompt Studio
-- **FR-040:** Generate prompts only; actual video generation is out of scope initially.
-- **FR-041:** Record source/version provenance.
-- **FR-042:** Segment timing, prompt schema, scene rules, aspect ratio, and validation must be extracted from `VIDEO PROMT GENRATOR.pdf`; until then they are TBD.
-- **FR-043:** If fixed-size segments are specified, final segment represents remaining duration (e.g. 180s at 8s maximum = 22×8s + 4s).
+### Video Prompt Studio — source-derived requirements
+- **FR-040:** Generate Google Flow prompts, not actual video clips.
+- **FR-041:** Analyze the complete script before prompting and output exactly one prompt per actual script part, preserving order and exact voiceover text.
+- **FR-042:** PDF defaults are Google Flow, 9:16, 8 seconds per part, ultra-realistic cinematic visuals, detected narration language, and no captions/subtitles/on-screen text. Voice gender must be selected Male/Female; ask if missing.
+- **FR-043:** Every independent prompt includes duration/ratio, scene and subject, time-coded shot progression, camera and subject movement, lighting/atmosphere/color, realistic action, exact narration, consistent voice identity, continuous music direction, ambience/SFX, transitions, continuity and negative constraints.
+- **FR-044:** Never silently shorten, translate, paraphrase or speed up narration to fit. Identify timing conflicts and request permission to revise or recommend a duration change.
+- **FR-045:** Keep visuals factually aligned; distinguish illustrative reconstruction from authenticated footage. Do not request captions, subtitles or any on-screen text.
+- **FR-046:** Include script analysis and one copy-ready prompt per part; run final quality checks on count, exact narration, language, duration, continuity, audio and text restrictions.
 
-### Thumbnail Studio
-- **FR-050:** Produce two separate concepts: A — Dramatic/High-Impact; B — Mystery/Story-Driven.
-- **FR-051:** Failure of one concept does not destroy the successful one.
-- **FR-052:** Preserve versions; support comparison, regeneration, approval, export.
-- **FR-053:** Dimensions, ratio, text rules, prompt format and validation must be extracted from `THUMBNAIL PROMPTS GENRATOR.pdf`.
+### Thumbnail Studio — source-derived requirements
+- **FR-050:** Analyze the complete script and produce exactly two independent image-generation prompts for the same story.
+- **FR-051:** Option A uses dramatic/high-impact art direction; Option B uses a genuinely distinct mystery/story-driven/cinematic approach.
+- **FR-052:** If aspect ratio is supplied, follow it. If absent, ask: “Thumbnail 16:9 YouTube video ke liye chahiye ya 9:16 Shorts/Reels ke liye?” Do not infer from video ratio.
+- **FR-053:** Include composition, focal hierarchy, relevant subject/environment, lighting, color grading, perspective, realism, truthful curiosity hook and negative constraints.
+- **FR-054:** Follow text preference. If text is not requested, explicitly forbid text, letters, numbers, captions, subtitles, logos and watermarks; if requested, keep it concise, language-appropriate and factually supported.
+- **FR-055:** Do not invent facts or portray fictional reconstruction as authentic news photography. Explain concept differences; never guarantee CTR.
 
-### SEO Studio
-- **FR-060:** Follow the actual `SEO GENERATOR.pdf` guide.
-- **FR-061:** Required fields/counts/limits/language/format/validation/export must be extracted from that PDF.
-- **FR-062:** Do not guarantee search ranking or performance.
+### SEO Studio — source-derived requirements
+- **FR-060:** Analyze both original source story and final script; create metadata reflecting what the finished video actually communicates.
+- **FR-061:** Cross-check facts and flag contradictions, speculation and time-sensitive claims. Verify current claims when reliable research is available; never claim search-volume/trend research was done unless it was.
+- **FR-062:** Output in exact order: source analysis; final-script analysis; source/script accuracy check; primary hook title; up to two optional alternatives; complete description; keyword research; tags plus character count; hashtags; final upload checklist.
+- **FR-063:** Description includes opening two lines, accurate summary, useful key information, natural keywords, supported source context/links, production-accurate disclaimer and relevant hashtags.
+- **FR-064:** Keyword groups: primary, secondary, long-tail, location/entity, language variations, and timely terms when appropriate. If live search-interest data is unavailable, label suggestions “not verified by live search-volume data.”
+- **FR-065:** Tags must be comma-separated and within 500 characters including commas/spaces; report actual count. Hashtags must be relevant and limited.
+- **FR-066:** Do not keyword-stuff, use unrelated trends, invent an SEO score, or promise rankings/virality/impressions. Use AI disclaimer wording only when it accurately reflects the actual workflow.
 
 ### ULTRA CORE/jobs
 - **FR-070:** Match models to task capability and authorization.
@@ -103,14 +112,16 @@ Downstream jobs require the correct upstream versions, required approvals, curre
 
 ## 6. Unresolved decisions
 
-PDF-derived generator rules; provider/model inventory and quota APIs; auth/roles; stack/database/queue/storage/hosting; platform-managed keys and billing; retention/backups/permanent purge; exact output schemas and approval transitions.
+Provider/model inventory and quota APIs; auth/roles; stack/database/queue/storage/hosting; platform-managed keys and billing; retention/backups/permanent purge; exact output schemas and approval transitions.
 
 ## 7. Acceptance criteria
 
 - Source retrieval limitations are honest; source provenance is retained.
 - Original skill files remain unchanged; script outputs satisfy the skill contract.
 - Real audio exists and is playable/downloadable.
-- SEO/video/thumbnail outputs match extracted PDF rules.
+- Video Prompt Studio creates one faithful prompt per part with no on-screen text and consistent narration/audio.
+- Thumbnail Studio creates two distinct, factually aligned prompts at the specified ratio, asking if ratio is absent.
+- SEO output follows the exact ten-section order and validates the 500-character tag limit.
 - Free-first and no-auto-paid behavior is tested, including provider failure and quota exhaustion.
 - Version/approval/freshness and stale propagation work without deleting history.
 - Project isolation, SSRF/upload controls, secret redaction, lifecycle and recovery are tested.
