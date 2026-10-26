@@ -1,10 +1,12 @@
 # YouTube Video Script Writer - starting point
-# Copy this file, replace every empty value with your own data, keep the field names.
+# Copy this file, replace every placeholder with your own value, keep the field names.
+# The word-budget helper reads video.target_minutes and video.words_per_minute.
 video:
   channel: <channel name>
   topic: <one topic>
   audience: <who it is for>
   target_minutes: <number>
+  words_per_minute: <number>
   primary_action: <watch to the end | subscribe | visit url>
   hook_deadline_seconds: <number>
   beats:
