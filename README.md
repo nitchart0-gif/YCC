@@ -4,9 +4,13 @@
 
 YCC Studio is planned as an end-to-end YouTube content-production workspace: source intake and analysis, reference and master scripts, audio generation, video prompt preparation, thumbnail concepts, and SEO deliverables in a project-based workflow.
 
+## Start here
+
+**Read [MASTER_PRODUCT_PLAN.md](MASTER_PRODUCT_PLAN.md) first.** It is the consolidated hand-off specification for any AI coding agent or developer. It covers the product vision, complete workflow, studio-by-studio output contracts, ULTRA CORE, logical data model, security, validation/testing, implementation phases, unresolved decisions, and release criteria.
+
 ## Planned workflow
 
-`Source Input → Source Analysis → Reference Script → Master Script → Sound Studio / Video Prompt Studio / Thumbnail Studio / SEO Studio`
+Source Input → Source Analysis → Reference Script → Master Script → Sound Studio / Video Prompt Studio / Thumbnail Studio / SEO Studio
 
 **ULTRA CORE** centrally handles provider/model eligibility, free-first routing, quota signals, persistent jobs, bounded retries, compatible fallbacks, explicit paid-use approval, usage/cost tracking, and normalized errors.
 
@@ -16,7 +20,7 @@ YCC Studio is planned as an end-to-end YouTube content-production workspace: sou
 - `SEO GENERATOR.pdf` — SEO generator rule/result guide.
 - `VIDEO PROMT GENRATOR.pdf` — video prompt generator rule/result guide.
 - `THUMBNAIL PROMPTS GENRATOR.pdf` — thumbnail prompt generator guide.
-- The root planning documents describe product requirements, architecture, features, implementation phases, UI rules, and project continuity.
+- Root planning documents describe product requirements, architecture, features, implementation phases, UI rules, project continuity, and the consolidated master plan.
 
 ## Confirmed script skill contract
 
@@ -34,7 +38,7 @@ The helper's documented command is:
 python3 "SCRIP SKILLS/scripts/script_length.py" --input "SCRIP SKILLS/templates/video-brief.yaml" --out ./out
 ```
 
-Replace the template placeholders with real values before running. The helper now requires positive numeric duration and words-per-minute values; it refuses to overwrite an existing `calculation.md` unless `--overwrite` is supplied.
+Replace the template placeholders with real values before running. The helper requires positive numeric duration and words-per-minute values; it refuses to overwrite an existing `calculation.md` unless `--overwrite` is supplied.
 
 ## Development principles
 
@@ -45,9 +49,11 @@ Replace the template placeholders with real values before running. The helper no
 5. ULTRA CORE is free-first. Never automatically select paid models, including as fallback.
 6. Report only implemented and verified behavior as complete.
 7. Never commit API keys, passwords, tokens, or other secrets.
+8. Treat unresolved architecture, provider, billing, retention, and access choices as explicit decisions—not assumptions.
 
 ## Documentation
 
+- [Master Product Plan — read first](MASTER_PRODUCT_PLAN.md)
 - [Requirements](PROJECT_REQUIREMENTS.md)
 - [Architecture](ARCHITECTURE.md)
 - [Features](FEATURES.md)
@@ -57,4 +63,4 @@ Replace the template placeholders with real values before running. The helper no
 
 ## Known limitations
 
-The PDF files are present in the repository, but their binary contents could not be extracted by the GitHub text-fetch operation in this pass. Their exact requirements/examples must be extracted before claiming the SEO, video-prompt, or thumbnail specs have been fully analyzed. Provider inventory, retention policy, paid billing policy, and application stack also remain TBD.
+Planning documents specify the intended behavior but do not prove the application has been implemented. The application stack, authentication, database, queue, storage, provider inventory, quota/billing integrations, retention policy, and deployment remain unresolved or unverified. PDF-derived generator contracts are documented from the user-provided text export summarized in the planning documents; deterministic fixtures and automated validators still need to be implemented and tested. Draft PRs must not be described as merged.
