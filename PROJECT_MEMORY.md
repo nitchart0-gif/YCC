@@ -7,9 +7,10 @@
 - Default branch inspected: `main`
 - Documentation branch: `docs/ycc-project-blueprint`
 - Script helper fix branch: `fix/script-brief-schema`
-- Current phase: Phase 0/1 — baseline audit and generator contracts.
+- Current phase: Phase 0/1 — baseline audit, consolidated product contract, and generator contracts.
 - Application code/runtime: not verified in inspected recursive tree.
-- Documentation baseline and PDF-derived generator contracts are being added on the documentation branch; final branch/tree verification remains required.
+- Consolidated master plan: `MASTER_PRODUCT_PLAN.md` added to the documentation branch; it is the primary hand-off document for any AI builder/developer.
+- Documentation branch contains root planning documents; final branch/tree verification and PR review/merge remain separate steps.
 
 ## Confirmed files on main
 - `README.md` (initially only `# YCC\nYCC`)
@@ -45,7 +46,7 @@ Skill `youtube-video-script`, version 1.0.7. Contract: timed script with hook/ti
 
 ### Thumbnail Prompt Generator
 - Generate exactly two distinct, independently copyable image prompts for the same story: A dramatic/high-impact; B mystery/story-driven/cinematic.
-- Follow explicitly supplied thumbnail aspect ratio. If absent, ask whether 16:9 or 9:16; do not infer it from video format.
+- Follow explicitly supplied thumbnail aspect ratio. If absent ask whether 16:9 or 9:16; do not infer it from video format.
 - Follow thumbnail-text preference; if no text requested, explicitly forbid text/letters/numbers/captions/logos/watermarks.
 - Preserve facts, avoid fabricated events and false documentary authenticity; do not promise CTR.
 
@@ -60,21 +61,37 @@ Skill `youtube-video-script`, version 1.0.7. Contract: timed script with hook/ti
 - Built-in editor deferred.
 - Never claim unimplemented/unverified work is complete.
 
+## Master plan contents
+`MASTER_PRODUCT_PLAN.md` is the central hand-off spec. It includes:
+- Instructions for AI builders and status/decision labels.
+- Product vision, scope boundaries, terminology, workflow, lifecycle, statuses, dependencies, and approval gates.
+- Detailed Source Input, Source Analysis, Reference Script/Master Script, Sound Studio, Video Prompt, Thumbnail, and SEO requirements.
+- ULTRA CORE provider/model registry, capability matching, free-first routing, quota handling, jobs/retries/fallbacks, validation, paid authorization, usage tracking, and observability.
+- Logical entities, API/service boundaries, screen anatomy and UI states.
+- Security/privacy/rights, test layers, generator regression fixtures, phased implementation sequence.
+- Decision Register with 30 unresolved choices, traceability map, implementation truth, hand-off checklist, and final acceptance criteria.
+
 ## Work log
 - [x] Inspected root and recursive tree on main.
 - [x] Read README and all text files in SCRIP SKILLS.
 - [x] Transcribed user-provided PDF text export into Features, Requirements and Implementation Plan on the documentation branch.
-- [ ] Verify documentation files and branch commit.
+- [x] Added `MASTER_PRODUCT_PLAN.md` (approximately 9,700 words) on `docs/ycc-project-blueprint`.
+- [x] Updated README to make the master plan the first document to read and clarify that planned behavior is not proof of implementation.
+- [x] Updated this project memory to record the consolidated plan and its boundaries.
+- [ ] Verify the new master plan, README, and memory files from GitHub after commit.
+- [ ] Verify all documentation files and resulting branch/PR state.
 - [ ] Turn PDF rules into prompt fixtures and automated validators.
 - [ ] Select application stack only after confirming runtime/deployment needs.
 
 ## Next steps
-1. Verify the documentation branch changes and resulting file tree.
-2. Build sample fixtures for SEO, video prompts and thumbnails; implement rule-based validators for exact output structure, counts, ratios and limits.
-3. Decide auth/roles, stack/database/queue/storage, provider keys/billing, retention/backups and deployment.
-4. Finalize schemas and approval transitions.
-5. Implement project/source foundations, then durable jobs and ULTRA CORE before expensive generation studios.
-6. Verify each studio with unit/integration/E2E/security tests and update this file with exact outcomes.
+1. Fetch the three updated files from the documentation branch and verify content/links.
+2. Review the draft documentation PR and confirm whether the repository owner wants it merged; do not merge without authorization.
+3. Run script helper tests in a network-independent environment: `python3 -m unittest discover -s "SCRIP SKILLS/tests" -v`. Record actual output; do not claim pass before execution.
+4. Build sample fixtures and deterministic validators for SEO, video prompts, and thumbnails.
+5. Resolve the Master Plan Decision Register, starting with stack, auth, database, queue, storage, provider inventory, paid-use authorization, and retention.
+6. Finalize schemas and approval transitions.
+7. Implement project/source foundations, then durable jobs and ULTRA CORE before expensive generation studios.
+8. Verify each studio with unit/integration/E2E/security tests and update this file with exact outcomes.
 
 ## Verified commands
 No application install/build/test commands are verified. The skill helper documents:
