@@ -22,7 +22,7 @@ YCC Studio is planned as an end-to-end YouTube content-production workspace: sou
 
 The original `SCRIP SKILLS/SKILL.md` specifies a timed script (hook, timestamped beats, closing CTA), three title options under 100 characters, a description under 5,000 characters with links/disclosure, and production notes for footage/caption/licensing flags. Its reference also states tags should total no more than 500 characters and chapters should have at least three entries, start at `00:00`, and last at least ten seconds each. Re-check platform guidance before release.
 
-The included Python helper writes a word-budget calculation report only; it does not generate the complete script or validate every platform limit. The brief template uses nested `video.target_minutes`, while the helper reads flat `minutes` and `words_per_minute`. Use an adapter/test fixture; do not alter the originals silently.
+The included Python helper writes a word-budget calculation report only; it does not generate the complete script or validate every platform limit. Draft PR #2 updates it to read nested `video.target_minutes` and `video.words_per_minute`, while retaining legacy flat-field compatibility. The tests are committed but have not yet been executed in this environment.
 
 ## Setup status
 
@@ -34,7 +34,7 @@ The helper's documented command is:
 python3 "SCRIP SKILLS/scripts/script_length.py" --input "SCRIP SKILLS/templates/video-brief.yaml" --out ./out
 ```
 
-Use a controlled input fixture because the current template/helper schemas differ.
+Replace the template placeholders with real values before running. The helper now requires positive numeric duration and words-per-minute values; it refuses to overwrite an existing `calculation.md` unless `--overwrite` is supplied.
 
 ## Development principles
 
