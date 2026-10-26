@@ -49,7 +49,7 @@ Do not mark work complete until it has been implemented and verified. Preserve t
 
 ## Phase 7 — Reference and Master Scripts
 - [ ] AI adapter follows original skill contract without modifying original files.
-- [ ] Schema adapter for nested brief and flat helper; regression tests.
+- [ ] Review and merge draft PR #2 for the nested brief schema adapter; run the committed regression tests locally/CI and fix any failures.
 - [ ] Validate titles, description, chapters, word count and duration.
 - [ ] Version/approve Reference Script; implement separate Master Script.
 **Exit:** Complete outputs and approval/stale gates verified.
