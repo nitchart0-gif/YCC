@@ -5,12 +5,13 @@ Do not mark work complete until it has been implemented and verified. Preserve t
 ## Phase 0 — Baseline audit
 - [x] Inspect repository root and recursive tree on `main`.
 - [x] Read README and text files in `SCRIP SKILLS/`.
-- [ ] Extract and transcribe all three PDF guides.
+- [x] Transcribe the supplied text export of the SEO, Video Prompt and Thumbnail Prompt PDFs into the feature and requirement specifications.
 - [ ] Verify documentation branch and resulting file tree.
-**Exit:** Existing references and unresolved gaps documented.
+**Exit:** Existing references, source-derived generator contracts and unresolved gaps documented.
 
 ## Phase 1 — Contracts and decisions
-- [ ] Finalize exact SEO/video/thumbnail schemas from PDFs.
+- [x] Transcribe the source-derived SEO/video/thumbnail output order, defaults, guardrails and validation rules.
+- [ ] Turn PDF rules into fixture-based acceptance tests, including exact output order and limits.
 - [ ] Define workflow transitions, approval gates, versioning and stale propagation.
 - [ ] Decide auth/roles, stack, provider key model, billing/paid authorization, retention/backups, deployment.
 - [ ] Link requirements to features and tests.
@@ -60,20 +61,23 @@ Do not mark work complete until it has been implemented and verified. Preserve t
 - [ ] Test provider/storage failure, partial output and idempotent retries.
 
 ## Phase 9 — Video Prompt Studio
-- [ ] Extract PDF requirements into fixtures/tests.
+- [x] Transcribe supplied PDF rules: complete-script analysis, exact per-part prompts, 8-second/9:16 defaults, voice selection, sound continuity and no on-screen text.
+- [ ] Turn requirements into prompt templates and fixtures.
 - [ ] Implement prompt/segment generation, timing, aspect ratio and export.
-- [ ] Test sum duration and partial final segment.
+- [ ] Test prompt count, exact narration preservation, duration conflicts, continuity and no-text rules.
 Actual video clip generation remains out of scope.
 
 ## Phase 10 — Thumbnail Studio
-- [ ] Extract PDF requirements into fixtures/tests.
+- [x] Transcribe supplied PDF rules: two distinct concepts, ratio clarification, text preference and factual constraints.
+- [ ] Turn requirements into fixtures for both concepts and text/no-text modes.
 - [ ] Implement two independent concepts and actual authorized image generation.
 - [ ] Add validation, storage, comparison, versioning, approval/export.
-- [ ] Test partial failure.
+- [ ] Test partial failure and missing aspect ratio.
 
 ## Phase 11 — SEO Studio
-- [ ] Extract PDF requirements into fixtures/tests.
-- [ ] Implement required outputs, count/character validation, review, versioning and export.
+- [x] Transcribe supplied PDF rules: source/script cross-check, ten-section output order, keyword grouping, description and tag limit.
+- [ ] Create sample fixtures and validators for required sections, title alternatives, character counts, tag limit and disclaimer accuracy.
+- [ ] Implement required outputs, review, versioning and export.
 
 ## Phase 12 — Asset lifecycle and production UX
 - [ ] Asset library, version comparison and per-version approvals.
@@ -88,7 +92,7 @@ Actual video clip generation remains out of scope.
 
 ## Minimum test matrix
 
-Settings precedence; source retrieval failure/SSRF; script schema/limits/helper adapter; model capability/free-first/paid approval; quota cache TTL/isolation; latency cold start; bounded retries/idempotency/recovery; version/approval/freshness; TTS real bytes/playback/download; PDF fixtures for video/thumbnail/SEO; cross-project access; secret redaction; archive/restore.
+Settings precedence; source retrieval failure/SSRF; script schema/limits/helper adapter; SEO exact section order, disclaimer truthfulness and tag count; video prompt count, narration fidelity, duration conflict, aspect ratio and no-text; thumbnail ratio clarification, concept distinction and text/no-text; model capability/free-first/paid approval; quota cache TTL/isolation; latency cold start; bounded retries/idempotency/recovery; version/approval/freshness; TTS real bytes/playback/download; cross-project access; secret redaction; archive/restore.
 
 ## Release checklist
 
@@ -96,6 +100,6 @@ Settings precedence; source retrieval failure/SSRF; script schema/limits/helper 
 - [ ] Provider results versus mocks are clearly distinguished.
 - [ ] No auto-paid path.
 - [ ] Source provenance and version history preserved.
-- [ ] PDF requirements validated by tests.
+- [ ] PDF-derived requirements validated by tests.
 - [ ] Security, lifecycle, backups and rollback verified.
 - [ ] Documentation matches actual code and known limitations.
